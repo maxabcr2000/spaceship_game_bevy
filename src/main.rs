@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 mod plugins;
+use plugins::asteroid::AesteroidPlugin;
 use plugins::spaceship::SpaceShipPlugin;
 use plugins::movement::MovementPlugin;
 use plugins::debug::DebugPlugin;
@@ -21,10 +22,9 @@ fn main() {
     })
     .add_plugins(DefaultPlugins)
     .add_plugins(SpaceShipPlugin)
+    .add_plugins(AesteroidPlugin)
     .add_plugins(CameraPlugin)
     .add_plugins(MovementPlugin)
     .add_plugins(DebugPlugin)
     .run();
 }
-
-//#TODO: Camera

@@ -1,15 +1,9 @@
 use bevy::prelude::*;
 
-use super::movement::Velocity;
+use super::movement::{Acceleration, MovingObjectBundle, Velocity};
 
 const STARTING_TRANSLATION: Vec3 = Vec3::new(0.0, 0.0, -20.0);
 const STARTING_VELOCITY: Vec3 = Vec3::new(0.0, 0.0, 1.0);
-
-#[derive(Bundle)]
-pub struct SpaceShipBundle {
-    velocity: Velocity,
-    model: SceneBundle,
-}
 
 pub struct SpaceShipPlugin;
 impl Plugin for SpaceShipPlugin {
@@ -19,7 +13,6 @@ impl Plugin for SpaceShipPlugin {
     }
 }
 
-
 // fn spawn_entity(mut commands: Commands) {
 //     commands.spawn((
 //         SpatialBundle::default(), 
@@ -28,8 +21,9 @@ impl Plugin for SpaceShipPlugin {
 // }
 
 fn spawn_entity(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(SpaceShipBundle {
-        velocity: Velocity{ value: STARTING_VELOCITY},
+    commands.spawn(MovingObjectBundle {
+        velocity: Velocity::new(STARTING_VELOCITY),
+        acceleration: Acceleration::new(Vec3::ZERO),
         model: SceneBundle {
             //#NOTE: Models need to be located under the "assets" folder at the root level, not at the src level
             scene: asset_server.load("Spaceship.glb#Scene0"),
