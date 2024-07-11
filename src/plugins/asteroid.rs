@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use bevy::prelude::*;
 use rand::Rng;
-use super::movement::{Acceleration, MovingObjectBundle, Velocity};
+use super::{asset_loader::SceneAssets, movement::{Acceleration, MovingObjectBundle, Velocity}};
 
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
@@ -27,7 +27,7 @@ pub struct SpawnTimer{
     timer: Timer,
 }
 
-fn spawn_aesteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, time: Res<Time>,asset_server: Res<AssetServer>) {
+fn spawn_aesteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, time: Res<Time>, scene_assets: Res<SceneAssets>) {
     spawn_timer.timer.tick(time.delta());
     if !spawn_timer.timer.just_finished() {
         return;
@@ -53,7 +53,7 @@ fn spawn_aesteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, 
         acceleration: Acceleration::new(acceleration),
         model: SceneBundle {
             //#NOTE: Models need to be located under the "assets" folder at the root level, not at the src level
-            scene: asset_server.load("Planet.glb#Scene0"),
+            scene: scene_assets.asteroid.clone(),
             transform: Transform::from_translation(translation),
             ..default()
         }

@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 mod plugins;
+use plugins::asset_loader::AssetLoaderPlugin;
 use plugins::asteroid::AesteroidPlugin;
 use plugins::spaceship::SpaceShipPlugin;
 use plugins::movement::MovementPlugin;
@@ -21,6 +22,7 @@ fn main() {
         brightness: 300.0
     })
     .add_plugins(DefaultPlugins)
+    .add_plugins(AssetLoaderPlugin)
     .add_plugins(SpaceShipPlugin)
     .add_plugins(AesteroidPlugin)
     .add_plugins(CameraPlugin)
