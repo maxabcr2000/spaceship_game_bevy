@@ -3,9 +3,10 @@ mod plugins;
 use plugins::asset_loader::AssetLoaderPlugin;
 use plugins::asteroid::AesteroidPlugin;
 use plugins::collision_detection::CollisionDetectionPlugin;
+use plugins::despawn::DespawnPlugin;
 use plugins::spaceship::SpaceShipPlugin;
 use plugins::movement::MovementPlugin;
-use plugins::debug::DebugPlugin;
+// use plugins::debug::DebugPlugin;
 use plugins::camera::CameraPlugin;
 
 
@@ -28,7 +29,8 @@ fn main() {
     .add_plugins(AesteroidPlugin)
     .add_plugins(CameraPlugin)
     .add_plugins(MovementPlugin)
+    .add_plugins(DespawnPlugin)
     .add_plugins(CollisionDetectionPlugin)
-    .add_plugins(DebugPlugin)
+    // .add_plugins(DebugPlugin)
     .run();
 }
