@@ -2,6 +2,7 @@ use bevy::prelude::*;
 mod plugins;
 use plugins::asset_loader::AssetLoaderPlugin;
 use plugins::asteroid::AesteroidPlugin;
+use plugins::collision_detection::CollisionDetectionPlugin;
 use plugins::spaceship::SpaceShipPlugin;
 use plugins::movement::MovementPlugin;
 use plugins::debug::DebugPlugin;
@@ -27,6 +28,7 @@ fn main() {
     .add_plugins(AesteroidPlugin)
     .add_plugins(CameraPlugin)
     .add_plugins(MovementPlugin)
+    .add_plugins(CollisionDetectionPlugin)
     .add_plugins(DebugPlugin)
     .run();
 }

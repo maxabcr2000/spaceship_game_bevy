@@ -1,14 +1,15 @@
 use bevy::prelude::*;
 
-use super::{asset_loader::SceneAssets, movement::{Acceleration, MovingObjectBundle, Velocity}};
+use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}};
 
 const STARTING_TRANSLATION: Vec3 = Vec3::new(0.0, 0.0, -20.0);
 const SPACESHIP_SPEED: f32 = 25.0;
 const SPACESHIP_ROTATION_SPEED: f32 = 2.5;
 const SPACESHIP_ROLL_SPEED: f32 = 2.5;
+const SPACESHIP_RADIOUS: f32 = 5.0; 
 const MISSILE_SPAWN_FORWARD_SCALAR: f32 = 7.5;
-
 const MISSILE_SPEED: f32 = 50.0;
+const MISSILE_RADIOUS:f32 = 1.0;
 
 pub struct SpaceShipPlugin;
 impl Plugin for SpaceShipPlugin {
@@ -38,6 +39,7 @@ fn spawn_entity(mut commands: Commands, scene_assets: Res<SceneAssets>) {
     commands.spawn((MovingObjectBundle {
         velocity: Velocity::new(Vec3::ZERO),
         acceleration: Acceleration::new(Vec3::ZERO),
+        collider: Collider::new(SPACESHIP_RADIOUS),
         model: SceneBundle {
             //#NOTE: Models need to be located under the "assets" folder at the root level, not at the src level
             scene: scene_assets.spaceship.clone(),
@@ -105,6 +107,7 @@ fn spaceship_weapon_controls(
             //#NOTE: It seems bevy's forward direction is opposite to the common model, so will need to use negative here
             velocity: Velocity::new(-spaceship_transform.forward() * MISSILE_SPEED),
             acceleration: Acceleration::new(Vec3::ZERO),
+            collider: Collider::new(MISSILE_RADIOUS),
             model: SceneBundle {
                 scene: scene_assets.missiles.clone(),
                 transform: Transform::from_translation(spaceship_transform.translation + -spaceship_transform.forward() * MISSILE_SPAWN_FORWARD_SCALAR),
