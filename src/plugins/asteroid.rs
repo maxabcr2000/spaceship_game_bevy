@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use bevy::prelude::*;
 use rand::Rng;
-use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}};
+use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, schedule::InGameSet};
 
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;
@@ -17,7 +17,7 @@ impl Plugin for AesteroidPlugin {
     fn build(&self, app: &mut App) {
         app
         .insert_resource(SpawnTimer { timer: Timer::from_seconds(SPAWN_TIME_SECONDS, TimerMode::Repeating)})
-        .add_systems(Update, (spawn_aesteroid, rotate_asteroids, handle_asteroid_collision));
+        .add_systems(Update, (spawn_aesteroid, rotate_asteroids).in_set(InGameSet::EntityUpdate));
     }
 }
 
@@ -72,19 +72,19 @@ fn rotate_asteroids(
     }
 }
 
-fn handle_asteroid_collision(
-    mut commands: Commands,
-    query: Query<(Entity, &Collider), With<Asteroid>>, 
-) {
-    for (entity, collider) in &query {
-        for &collided_entity in collider.colliding_entities.iter() {
-            //#NOTE: Do nothing when asteroid collides with other asteroids
-            if query.get(collided_entity).is_ok() {
-                continue;
-            }
+// fn handle_asteroid_collision(
+//     mut commands: Commands,
+//     query: Query<(Entity, &Collider), With<Asteroid>>, 
+// ) {
+//     for (entity, collider) in &query {
+//         for &collided_entity in collider.colliding_entities.iter() {
+//             //#NOTE: Do nothing when asteroid collides with other asteroids
+//             if query.get(collided_entity).is_ok() {
+//                 continue;
+//             }
 
-            //#NOTE: Destroy the asteroid (including its children)
-            commands.entity(entity).despawn_recursive();
-        }
-    }
-}
+//             //#NOTE: Destroy the asteroid (including its children)
+//             commands.entity(entity).despawn_recursive();
+//         }
+//     }
+// }

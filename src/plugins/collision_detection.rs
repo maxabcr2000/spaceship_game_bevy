@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
+use super::{asteroid::Asteroid, schedule::InGameSet, spaceship::Spaceship};
+
 /*#NOTE: 
 This plugin is just for practicing purpose, it would be better to be replaced by other third-party plugins for physics
 like: bevy-rapier(https://github.com/dimforge/bevy_rapier) or bevy-xpbd(https://github.com/Jondolf/avian)
@@ -11,7 +13,13 @@ pub struct CollisionDetectionPlugin;
 impl Plugin for CollisionDetectionPlugin {
     fn build(&self, app: &mut App) {
         app
-        .add_systems(Update, collision_detection);
+        .add_systems(Update, collision_detection.in_set(InGameSet::CollisionDetection))
+        .add_systems(Update,
+            (
+            handle_collision::<Asteroid>,
+            handle_collision::<Spaceship>, 
+            ).in_set(InGameSet::DespawnEntities),
+        );
     }
 }
 
@@ -53,6 +61,24 @@ fn collision_detection(mut query: Query<(Entity, &GlobalTransform, &mut Collider
 
         if let Some(collisions) = colliding_entities.get(&entity) {
             collider.colliding_entities = collisions.clone();
+        }
+    }
+}
+
+//#NOTE: System that support Generic Component
+fn handle_collision<T: Component>(
+    mut commands: Commands,
+    query: Query<(Entity, &Collider), With<T>>, 
+) {
+    for (entity, collider) in &query {
+        for &collided_entity in collider.colliding_entities.iter() {
+            //#NOTE: Do nothing when same type of entity collides with other
+            if query.get(collided_entity).is_ok() {
+                continue;
+            }
+
+            //#NOTE: Destroy the entity  (including its children)
+            commands.entity(entity).despawn_recursive();
         }
     }
 }

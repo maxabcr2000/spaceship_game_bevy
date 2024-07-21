@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}};
+use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, schedule::InGameSet};
 
 const STARTING_TRANSLATION: Vec3 = Vec3::new(0.0, 0.0, -20.0);
 const SPACESHIP_SPEED: f32 = 25.0;
@@ -17,12 +17,22 @@ impl Plugin for SpaceShipPlugin {
         app
         //#NOTE: Need to be run after asset_loader plugin which is loaded at startup
         .add_systems(PostStartup, spawn_entity)
-        .add_systems(Update, (spaceship_movement_controls,spaceship_weapon_controls));
+        .add_systems(Update, 
+            (
+                spaceship_movement_controls,
+                spaceship_weapon_controls,
+                spaceship_shield_controls,
+            ).chain()
+            .in_set(InGameSet::UserInput),
+        );
     }
 }
 
 #[derive(Component, Debug)]
 pub struct Spaceship;    //TAG
+
+#[derive(Component, Debug)]
+pub struct SpaceshipShield;    //TAG
 
 #[derive(Component, Debug)]
 pub struct SpaceshipMissile;    //TAG
@@ -55,7 +65,11 @@ fn spaceship_movement_controls(
     keyboard_input: Res<ButtonInput<KeyCode>>, 
     time: Res<Time>,
 ) {
-    let (mut transform, mut velocity) = query.single_mut();
+    //#NOTE: Use get_single_mut instead of single_mut to avoid panic
+    let Ok((mut transform, mut velocity)) = query.get_single_mut() else {
+        return;
+    };
+
     let mut rotation = 0.0;
     let mut roll = 0.0;
     let mut movement = 0.0;
@@ -101,7 +115,11 @@ fn spaceship_weapon_controls(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     scene_assets: Res<SceneAssets>,
 ) {
-    let spaceship_transform = query.single();
+    //#NOTE: Use get_single instead of single to avoid panic
+    let Ok(spaceship_transform) = query.get_single() else {
+        return;
+    };
+
     if keyboard_input.pressed(KeyCode::Space) {
         commands.spawn((MovingObjectBundle {
             //#NOTE: It seems bevy's forward direction is opposite to the common model, so will need to use negative here
@@ -114,5 +132,20 @@ fn spaceship_weapon_controls(
                 ..default()
             }
         }, SpaceshipMissile));
+    }
+}
+
+fn spaceship_shield_controls(
+    mut commands: Commands,
+    query: Query<Entity, With<Spaceship>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+) {
+    //#NOTE: Use get_single instead of single to avoid panic
+    let Ok(spaceship) = query.get_single() else {
+        return;
+    };
+
+    if keyboard_input.pressed(KeyCode::Tab) {
+        commands.entity(spaceship).insert(SpaceshipShield);
     }
 }

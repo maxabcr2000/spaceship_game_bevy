@@ -8,6 +8,7 @@ use plugins::spaceship::SpaceShipPlugin;
 use plugins::movement::MovementPlugin;
 // use plugins::debug::DebugPlugin;
 use plugins::camera::CameraPlugin;
+use plugins::schedule::SchedulePlugin;
 
 
 fn main() {
@@ -31,6 +32,7 @@ fn main() {
     .add_plugins(MovementPlugin)
     .add_plugins(DespawnPlugin)
     .add_plugins(CollisionDetectionPlugin)
+    .add_plugins(SchedulePlugin)
     // .add_plugins(DebugPlugin)
     .run();
 }
