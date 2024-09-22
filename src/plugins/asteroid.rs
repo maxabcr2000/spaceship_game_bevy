@@ -1,8 +1,7 @@
 use std::ops::Range;
-
 use bevy::prelude::*;
 use rand::Rng;
-use super::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, schedule::InGameSet};
+use crate::plugins::{asset_loader::SceneAssets, collision_detection::Collider, movement::{Acceleration, MovingObjectBundle, Velocity}, schedule::InGameSet};
 
 const SPAWN_RANGE_X: Range<f32> = -25.0..25.0;
 const SPAWN_RANGE_Z: Range<f32> = 0.0..25.0;

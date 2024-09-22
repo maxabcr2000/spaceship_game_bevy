@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-
-use super::{collision_detection::Collider, schedule::InGameSet};
+use crate::plugins::{collision_detection::Collider, schedule::InGameSet};
 
 #[derive(Component, Debug)]
 pub struct Velocity{

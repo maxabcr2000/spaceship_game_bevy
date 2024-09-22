@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-
-use super::schedule::InGameSet;
+use crate::plugins::schedule::InGameSet;
 
 const DESPAWN_DISTANCE: f32 = 100.0;
 

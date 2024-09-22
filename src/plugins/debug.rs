@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-
-use super::schedule::InGameSet;
+use crate::plugins::schedule::InGameSet;
 
 pub struct DebugPlugin;
 impl Plugin for DebugPlugin {

@@ -7,3 +7,4 @@ pub mod asset_loader;
 pub mod collision_detection;
 pub mod despawn;
 pub mod schedule;
+pub mod state;

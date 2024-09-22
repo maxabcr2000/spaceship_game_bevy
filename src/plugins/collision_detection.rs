@@ -1,8 +1,6 @@
 use std::collections::HashMap;
-
 use bevy::prelude::*;
-
-use super::{asteroid::Asteroid, schedule::InGameSet, spaceship::Spaceship};
+use crate::plugins::{asteroid::Asteroid, schedule::InGameSet, spaceship::Spaceship};
 
 /*#NOTE: 
 This plugin is just for practicing purpose, it would be better to be replaced by other third-party plugins for physics
