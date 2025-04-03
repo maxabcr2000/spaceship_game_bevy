@@ -53,13 +53,10 @@ fn spawn_aesteroid(mut commands: Commands, mut spawn_timer: ResMut<SpawnTimer>, 
         velocity: Velocity::new(velocity),
         acceleration: Acceleration::new(acceleration),
         collider: Collider::new(RADIUS),
-        model: SceneBundle {
-            //#NOTE: Models need to be located under the "assets" folder at the root level, not at the src level
-            scene: scene_assets.asteroid.clone(),
-            transform: Transform::from_translation(translation),
-            ..default()
-        },
-    }, Asteroid));
+        model: SceneRoot(scene_assets.asteroid.clone()),
+    }, 
+    Transform::from_translation(translation),
+    Asteroid));
 }
 
 fn rotate_asteroids(
@@ -67,7 +64,7 @@ fn rotate_asteroids(
     time: Res<Time>,
 ){
     for mut transform in &mut query {
-        transform.rotate_local_z(ROTATION_SPEED * time.delta_seconds());
+        transform.rotate_local_z(ROTATION_SPEED * time.delta_secs());
     }
 }
 

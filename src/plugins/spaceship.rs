@@ -49,13 +49,10 @@ fn spawn_entity(mut commands: Commands, scene_assets: Res<SceneAssets>) {
         velocity: Velocity::new(Vec3::ZERO),
         acceleration: Acceleration::new(Vec3::ZERO),
         collider: Collider::new(SPACESHIP_RADIOUS),
-        model: SceneBundle {
-            //#NOTE: Models need to be located under the "assets" folder at the root level, not at the src level
-            scene: scene_assets.spaceship.clone(),
-            transform: Transform::from_translation(STARTING_TRANSLATION),
-            ..default()
-        }
-    }, Spaceship));
+        model: SceneRoot(scene_assets.spaceship.clone()),
+    },
+    Transform::from_translation(STARTING_TRANSLATION),
+    Spaceship));
 }
 
 fn spaceship_movement_controls(
@@ -75,11 +72,11 @@ fn spaceship_movement_controls(
 
     //#NOTE: Bevy v0.12 KeyCode::D => v0.13 KeyCode::KeyD
     if keyboard_input.pressed(KeyCode::KeyD) {
-        rotation = -SPACESHIP_ROTATION_SPEED * time.delta_seconds();
+        rotation = -SPACESHIP_ROTATION_SPEED * time.delta_secs();
 
     //#NOTE: Bevy v0.12 KeyCode::A => v0.13 KeyCode::KeyA
     } else if keyboard_input.pressed(KeyCode::KeyA) {
-        rotation = SPACESHIP_ROTATION_SPEED * time.delta_seconds();
+        rotation = SPACESHIP_ROTATION_SPEED * time.delta_secs();
     }
 
     //#NOTE: Bevy v0.12 KeyCode::W => v0.13 KeyCode::KeyW
@@ -92,10 +89,10 @@ fn spaceship_movement_controls(
     }
 
     if keyboard_input.pressed(KeyCode::ShiftLeft) {
-        roll = -SPACESHIP_ROLL_SPEED * time.delta_seconds();
+        roll = -SPACESHIP_ROLL_SPEED * time.delta_secs();
 
     } else if keyboard_input.pressed(KeyCode::ControlLeft) {
-        roll = SPACESHIP_ROLL_SPEED * time.delta_seconds();
+        roll = SPACESHIP_ROLL_SPEED * time.delta_secs();
     }
 
     //#NOTE: Rotate around y axis, and ignore z axis rotation
@@ -125,12 +122,10 @@ fn spaceship_weapon_controls(
             velocity: Velocity::new(-spaceship_transform.forward() * MISSILE_SPEED),
             acceleration: Acceleration::new(Vec3::ZERO),
             collider: Collider::new(MISSILE_RADIOUS),
-            model: SceneBundle {
-                scene: scene_assets.missiles.clone(),
-                transform: Transform::from_translation(spaceship_transform.translation + -spaceship_transform.forward() * MISSILE_SPAWN_FORWARD_SCALAR),
-                ..default()
-            }
-        }, SpaceshipMissile));
+            model: SceneRoot(scene_assets.missiles.clone()),
+        },
+        Transform::from_translation(spaceship_transform.translation + -spaceship_transform.forward() * MISSILE_SPAWN_FORWARD_SCALAR),
+        SpaceshipMissile));
     }
 }
 

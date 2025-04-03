@@ -15,7 +15,7 @@ use plugins::state::StatePlugin;
 fn main() {
     App::new()
     //#NOTE: Adding a pure color background
-    .insert_resource(ClearColor(Color::rgb(0.1, 0.0, 0.15)))
+    .insert_resource(ClearColor(Color::srgb(0.1, 0.0, 0.15)))
     /*#NOTE: 
     Adding white light
     If you are running 0.13 and noticing that your model does not load properly (aka its completely black), this is due to the extent of brightness of AmbientLight being lowered in 0.12->0.13
